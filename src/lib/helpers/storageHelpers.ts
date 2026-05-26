@@ -20,7 +20,7 @@ async function uploadOptimizedImage(
   const filePath = `${options.folder}/${uuidv4()}.${optimized.ext}`;
 
   try {
-    const blob = await put(filePath, new Blob([optimized.buffer as BlobPart], { type: optimized.mimeType }), {
+    const blob = await put(filePath, new Blob([new Uint8Array(optimized.buffer)], { type: optimized.mimeType }), {
       access: "public",
       contentType: optimized.mimeType,
       addRandomSuffix: false,
@@ -107,7 +107,7 @@ export async function uploadHeroImage(file: File): Promise<UploadResult> {
   const filePath = `hero/${uuidv4()}.${optimized.ext}`;
 
   try {
-    const blob = await put(filePath, new Blob([optimized.buffer as BlobPart], { type: optimized.mimeType }), {
+    const blob = await put(filePath, new Blob([new Uint8Array(optimized.buffer)], { type: optimized.mimeType }), {
       access: "public",
       contentType: optimized.mimeType,
       addRandomSuffix: false,

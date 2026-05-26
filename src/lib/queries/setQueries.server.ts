@@ -17,7 +17,6 @@ import {
   productImageSelector,
   productSelector,
   setImageSelector,
-  setProductSelector,
   setSelector,
 } from "@/lib/db/selectors";
 import type { SetType, SetLayoutType } from "@/lib/schemas/setSchema";
@@ -268,7 +267,6 @@ export async function getSetPageBySlug(slug: string): Promise<SetPageResult> {
     const processedProducts: SetPageProduct[] = productRows.map((p) => {
       const imgs = allImages.filter((img) => img.product_id === p.id);
       const variants = allVariants.filter((v) => v.product_id === p.id);
-      const uniqueSizes = Array.from(new Set(variants.map((v) => v.size_name).filter(Boolean)));
       return {
         id: p.id,
         name: p.name,

@@ -40,7 +40,9 @@ export async function GET() {
             ...parsed.image_urls.filter((u): u is string => typeof u === "string"),
           );
         }
-      } catch {}
+      } catch {
+        // about content is optional and may be malformed; skip if so
+      }
     }
 
     return NextResponse.json(urls);
