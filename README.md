@@ -14,11 +14,20 @@ A complete ecommerce starter with admin panel, real-time stock, orders, and emai
 
 ---
 
+## How you got this code
+
+You purchased access via [itsmatias.com](https://itsmatias.com). You should have:
+
+1. **Created your own repo from this template.** On this repo's GitHub page, click **"Use this template" → "Create a new repository"** to make `your-username/my-store` (or whatever name you want). Your repo, your code, no shared history.
+2. **Or cloned directly** if you prefer: `git clone <this-repo-url> my-store && cd my-store && rm -rf .git && git init`.
+
+From here on, the README assumes you're working in your own copy.
+
 ## One-click deploy
 
-> Edit the button below to point to your fork before sharing it with anyone. The placeholder `YOUR_GITHUB_USERNAME` needs to be replaced with the username that owns the public/private fork of this repository.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmzanan%2Ffull-ecommerce&project-name=my-store&repository-name=my-store&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv,oac_VqOgBHqhEoFTPzGkPd7L0iH6)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_GITHUB_USERNAME%2Ffull-ecommerce&project-name=my-store&repository-name=my-store&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv,oac_VqOgBHqhEoFTPzGkPd7L0iH6)
+> Replace `mzanan` in the button URL above with your GitHub username after you create your own copy (or Vercel will clone the original).
 
 The button provisions:
 - A Neon Postgres database (auto-fills `POSTGRES_URL`)
@@ -30,6 +39,10 @@ You still need to:
 - Set up Stripe manually (see step 3 below)
 - Run the initial database migration (see step 4)
 - Configure the Clerk webhook (see step 1)
+
+## Edit with v0
+
+[v0.dev](https://v0.dev) can iterate on the UI with AI. Open v0, paste your repo URL, ask for changes ("change the hero to a fullscreen video", "swap the product grid to a mosaic"). It commits back to your repo as a PR. Works on any component file under `src/components/`.
 
 ---
 
@@ -108,8 +121,6 @@ If you want to dig deeper into the look (colors, fonts, hero copy), edit:
 - `src/config/brand.ts` — defaults if you don't want env vars
 - `src/components/ecommerce/home/Home/Home.tsx` — homepage layout
 
-Pro tip: use [v0.dev](https://v0.dev) to iterate on UI changes with AI assistance.
-
 ---
 
 ## What's in the box
@@ -149,4 +160,6 @@ drizzle.config.ts     # Drizzle Kit config
 
 ## License
 
-[Add your license here.]
+Commercial license — see [LICENSE](./LICENSE) and the full terms at [itsmatias.com/terms](https://itsmatias.com/terms).
+
+Quick version: you can use, modify, and deploy this on unlimited projects you own. You cannot resell or redistribute the source code as a stand-alone product. The footer attribution "Built by Matias Zanan" stays unless you buy the Remove Attribution add-on.
