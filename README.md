@@ -162,4 +162,4 @@ drizzle.config.ts     # Drizzle Kit config
 
 Commercial license — see [LICENSE](./LICENSE) and the full terms at [itsmatias.com/terms](https://itsmatias.com/terms).
 
-Quick version: you can use, modify, and deploy this on unlimited projects you own. You cannot resell or redistribute the source code as a stand-alone product. The footer attribution "Built by Matias Zanan" stays unless you buy the Remove Attribution add-on.
+Quick version: you can use, modify, and deploy this on unlimited projects you own. You cannot resell or redistribute the source code as a stand-alone product. The footer attribution "Built by Matias Zanan" stays unless you buy the [Remove Attribution add-on](https://buy.polar.sh/polar_cl_mK3kO9gASJE62I0Udu2QOgaBFpvHK2wERyVOP43h2YW).
