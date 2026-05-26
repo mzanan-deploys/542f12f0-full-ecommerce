@@ -1,0 +1,1 @@
+export const APP_SETTINGS_ABOUT_KEY = 'about_content'; 

@@ -1,0 +1,1 @@
+export { useSizeGuidesTable, type SizeGuideTemplate } from '@/lib/queries/sizeGuideQueries'; 
