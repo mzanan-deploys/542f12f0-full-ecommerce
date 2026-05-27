@@ -1,6 +1,6 @@
 # CLAUDE.md — full-ecommerce
 
-**Esto NO es NOIR.** Este repo es el **refactor sellable** del codebase NOIR, migrado a stack Path C (Vercel ecosystem) para distribuir como producto pago ($999) que el comprador deploya solo a su cuenta Vercel.
+**Esto NO es NOIR.** Este repo es el **refactor sellable** del codebase NOIR, migrado a stack Path C (Vercel ecosystem) para distribuir como producto pago ($990) que el comprador deploya solo a su cuenta Vercel.
 
 NOIR original sigue en `personal/ecommerce/` como demo público en `ecommerce.itsmatias.com`. Esto es la versión generic-template.
 
