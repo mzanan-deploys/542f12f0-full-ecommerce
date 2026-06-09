@@ -65,13 +65,18 @@ export const viewport = {
   shrinkToFit: 'no',
 };
 
+function AuthProvider({ children }: { children: React.ReactNode }) {
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) return <>{children}</>;
+  return <ClerkProvider>{children}</ClerkProvider>;
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <AuthProvider>
       <html lang="en" suppressHydrationWarning>
         <head>
           <OrganizationStructuredData />
@@ -104,6 +109,6 @@ export default function RootLayout({
           </AppThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }
