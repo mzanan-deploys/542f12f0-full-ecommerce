@@ -1,4 +1,4 @@
-Commercial License — full-ecommerce
+Commercial License. full-ecommerce.
 
 Copyright (c) 2026 Matias Zanan. All rights reserved.
 
@@ -26,7 +26,7 @@ Zanan" credit in the footer, linking to itsmatias.com. The footer renders
 this credit by default. You may legally remove it by purchasing the
 "Remove Attribution" add-on (SKU: full-ecommerce-attribution-removal):
 
-  https://buy.polar.sh/polar_cl_mK3kO9gASJE62I0Udu2QOgaBFpvHK2wERyVOP43h2YW
+  https://itsmatias.com/api/buy/remove-attribution-ecommerce
 
 After purchase you may set the environment variable
 NEXT_PUBLIC_HIDE_ATTRIBUTION=true to hide the credit.
@@ -44,4 +44,4 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 Full terms: https://itsmatias.com/terms
-Contact: matiaszanan@gmail.com
+Contact: hello@itsmatias.com

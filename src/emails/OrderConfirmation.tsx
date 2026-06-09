@@ -67,7 +67,7 @@ export default function OrderConfirmation({
             {items.map((item, i) => (
               <Text key={i} style={lineItemStyle}>
                 {item.quantity} × {item.name}
-                {item.size ? ` (${item.size})` : ""} — {formatMoney(item.price * item.quantity, currency)}
+                {item.size ? ` (${item.size})` : ""}: {formatMoney(item.price * item.quantity, currency)}
               </Text>
             ))}
           </Section>
@@ -106,7 +106,7 @@ export default function OrderConfirmation({
           <Text style={footerStyle}>
             Need help? Reply to this email{supportEmail ? ` or write us at ${supportEmail}` : ""}.
           </Text>
-          <Text style={footerStyle}>— {storeName}</Text>
+          <Text style={footerStyle}>. {storeName}</Text>
         </Container>
       </Body>
     </Html>

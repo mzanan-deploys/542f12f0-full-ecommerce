@@ -144,7 +144,7 @@ export function generateSetMetadata(setData: {
     title: setData.name,
     description:
       setData.description ||
-      `${setData.name} — ${brandName} collection from ${BRAND}.`,
+      `${setData.name}: ${brandName} collection from ${BRAND}.`,
     keywords,
     image: setData.imageUrl,
   });
@@ -158,7 +158,7 @@ export function generateProductMetadata(productData: {
 }) {
   const description =
     productData.description ||
-    `${productData.name} — Available now at ${BRAND}. Starting at $${productData.price}.`;
+    `${productData.name}: Available now at ${BRAND}. Starting at $${productData.price}.`;
   const keywords = [BRAND.toLowerCase(), productData.name.toLowerCase()];
 
   return generateMetadata({

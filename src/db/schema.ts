@@ -180,7 +180,7 @@ export const productVariants = pgTable("product_variants", {
 // ─────────────────────────────────────────────────────────────────────────────
 // sets
 // Note: NOIR-specific concept (DAY/NIGHT segmentation). Kept generic via type
-// column — buyer can rename DAY/NIGHT to whatever fits their brand or remove.
+// column: buyer can rename DAY/NIGHT to whatever fits their brand or remove.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const sets = pgTable(
@@ -334,7 +334,7 @@ export const orderItems = pgTable(
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// app_settings — key-value store
+// app_settings: key-value store
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const appSettings = pgTable("app_settings", {
@@ -343,7 +343,7 @@ export const appSettings = pgTable("app_settings", {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// hero_content — single-row table (id always 1)
+// hero_content: single-row table (id always 1)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const heroContent = pgTable("hero_content", {

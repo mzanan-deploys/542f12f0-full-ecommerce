@@ -1,6 +1,6 @@
-# Full Ecommerce — Production-ready Next.js template
+# Full Ecommerce: Production-ready Next.js template
 
-A complete ecommerce starter with admin panel, real-time stock, orders, and email notifications. Built on the Vercel ecosystem — one-click deploy, no server to manage.
+A complete ecommerce starter with admin panel, real-time stock, orders, and email notifications. Built on the Vercel ecosystem: one-click deploy, no server to manage.
 
 ## Stack
 
@@ -84,14 +84,14 @@ npm run lint
 3. Under **Webhooks**, add an endpoint pointing to `https://YOUR_DOMAIN/api/webhooks/clerk` with events `user.created`, `user.updated`, `user.deleted`. Copy the **Signing secret** to `CLERK_WEBHOOK_SECRET`.
 4. Under **User & Authentication → Restrictions**, disable public sign-ups so only invited admins can register.
 
-Every Clerk user is mirrored to the `admin_users` table by the webhook. There is no separate admin role — being in Clerk = being an admin. Lock down sign-ups in step 4.
+Every Clerk user is mirrored to the `admin_users` table by the webhook. There is no separate admin role: being in Clerk = being an admin. Lock down sign-ups in step 4.
 
 ### 2. Resend
 
 1. Create an account at [resend.com](https://resend.com) and verify a sending domain.
 2. Generate an API key and set `RESEND_API_KEY`.
 3. Set `RESEND_FROM_EMAIL` to a verified address (e.g. `orders@yourdomain.com`).
-4. Optionally set `SUPPORT_EMAIL` — appears in the order confirmation email.
+4. Optionally set `SUPPORT_EMAIL`: appears in the order confirmation email.
 
 ### 3. Stripe
 
@@ -117,21 +117,21 @@ npm run db:seed                  # (optional) demo data
 Set the `NEXT_PUBLIC_STORE_*` env vars to change the store name, title, description, contact, and category labels. No code changes needed.
 
 If you want to dig deeper into the look (colors, fonts, hero copy), edit:
-- `src/app/global.css` — Tailwind theme variables
-- `src/config/brand.ts` — defaults if you don't want env vars
-- `src/components/ecommerce/home/Home/Home.tsx` — homepage layout
+- `src/app/global.css`: Tailwind theme variables
+- `src/config/brand.ts`: defaults if you don't want env vars
+- `src/components/ecommerce/home/Home/Home.tsx`: homepage layout
 
 ---
 
 ## What's in the box
 
-- **Public store** — product listing, sets/collections, product detail, cart, checkout
-- **Admin panel** — products CRUD, categories, sets, hero, page components, homepage layout, size guides, country shipping prices, dashboard with orders
-- **Stock management** — real-time stock checks at add-to-cart and checkout
-- **Country-based shipping** — set prices per country with delivery estimates
-- **Stripe integration** — payment intents, webhooks, automatic order creation, product sync
-- **Order emails** — automated confirmation email on order placed, status updates on shipping
-- **SEO** — generated metadata, OpenGraph images, structured data
+- **Public store**: product listing, sets/collections, product detail, cart, checkout
+- **Admin panel**: products CRUD, categories, sets, hero, page components, homepage layout, size guides, country shipping prices, dashboard with orders
+- **Stock management**: real-time stock checks at add-to-cart and checkout
+- **Country-based shipping**: set prices per country with delivery estimates
+- **Stripe integration**: payment intents, webhooks, automatic order creation, product sync
+- **Order emails**: automated confirmation email on order placed, status updates on shipping
+- **SEO**: generated metadata, OpenGraph images, structured data
 
 ## Project structure
 
@@ -160,6 +160,6 @@ drizzle.config.ts     # Drizzle Kit config
 
 ## License
 
-Commercial license — see [LICENSE](./LICENSE) and the full terms at [itsmatias.com/terms](https://itsmatias.com/terms).
+Commercial license. See [LICENSE](./LICENSE) and the full terms at [itsmatias.com/terms](https://itsmatias.com/terms).
 
-Quick version: you can use, modify, and deploy this on unlimited projects you own. You cannot resell or redistribute the source code as a stand-alone product. The footer attribution "Built by Matias Zanan" stays unless you buy the [Remove Attribution add-on](https://buy.polar.sh/polar_cl_mK3kO9gASJE62I0Udu2QOgaBFpvHK2wERyVOP43h2YW). See the [Attribution section in LICENSE](./LICENSE) for the full clause and the consequences of removing it without the add-on.
+Quick version: you can use, modify, and deploy this on unlimited projects you own. You cannot resell or redistribute the source code as a stand-alone product. The footer attribution "Built by Matias Zanan" stays unless you buy the [Remove Attribution add-on](https://itsmatias.com/api/buy/remove-attribution-ecommerce) and set `NEXT_PUBLIC_HIDE_ATTRIBUTION=true` in your Vercel project. See the [Attribution section in LICENSE](./LICENSE) for the full clause and the consequences of removing it without the add-on.

@@ -36,7 +36,7 @@ export default async function HomePage() {
 export const metadata = generateMetadata({
   title: "Home",
   description:
-    "Discover our latest collections — production-ready sets curated for the modern wardrobe.",
+    "Discover our latest collections: production-ready sets curated for the modern wardrobe.",
   keywords: ["online store", "fashion", "premium", "collections"],
   canonicalUrl: "/",
 });

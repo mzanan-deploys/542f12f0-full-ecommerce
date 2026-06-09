@@ -19,7 +19,7 @@ const ENV_SECONDARY_DESCRIPTION = process.env.NEXT_PUBLIC_CATEGORY_SECONDARY_DES
 
 export const BRAND_CONFIG = {
   name: ENV_NAME ?? "Store",
-  title: ENV_TITLE ?? "Store — Modern ecommerce",
+  title: ENV_TITLE ?? "Store: Modern ecommerce",
   description: ENV_DESCRIPTION ?? "Production-ready ecommerce template.",
   keywords: ENV_KEYWORDS ? ENV_KEYWORDS.split(",").map((k) => k.trim()) : ["ecommerce", "store"],
 

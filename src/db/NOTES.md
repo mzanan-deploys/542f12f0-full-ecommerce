@@ -1,4 +1,4 @@
-# DB migration notes — Supabase → Drizzle + Vercel Postgres
+# DB migration notes: Supabase → Drizzle + Vercel Postgres
 
 Resumen de lo que cambió respecto al codebase NOIR original (`personal/ecommerce/supabase/migrations/`). Esto es referencia para refactorizar el código de queries/server-actions/RPCs.
 
@@ -19,10 +19,10 @@ Migrado tal cual a `schema.ts`. Excepciones:
 Vercel Postgres usa Postgres estándar sin RLS. Toda authz pasa a app code con Clerk.
 
 Helpers nuevos en `src/lib/auth/authz.ts`:
-- `getCurrentUserId()` — devuelve `userId` o null.
-- `requireAuth()` — throws `UNAUTHENTICATED` si no hay user.
-- `isAdmin(userId)` — query a `admin_users`.
-- `requireAdmin()` — throws `FORBIDDEN` si no es admin.
+- `getCurrentUserId()`: devuelve `userId` o null.
+- `requireAuth()`: throws `UNAUTHENTICATED` si no hay user.
+- `isAdmin(userId)`: query a `admin_users`.
+- `requireAdmin()`: throws `FORBIDDEN` si no es admin.
 
 Patrones de migración por tabla:
 
