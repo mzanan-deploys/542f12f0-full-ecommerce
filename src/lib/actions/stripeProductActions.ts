@@ -15,13 +15,20 @@ import type {
   StripeVariantSyncResult,
 } from "@/types/stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
+let cachedStripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (cachedStripe) return cachedStripe;
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error(
+      "Stripe not configured. Set STRIPE_SECRET_KEY in your Vercel project to enable product sync.",
+    );
+  }
+  cachedStripe = new Stripe(key, {
+    apiVersion: "2025-04-30.basil" as Stripe.LatestApiVersion,
+  });
+  return cachedStripe;
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil" as Stripe.LatestApiVersion,
-});
 
 export async function syncProductToStripe(
   productId: string,
@@ -47,7 +54,7 @@ export async function syncProductToStripe(
 
     let stripeProduct: Stripe.Product;
     try {
-      const existing = await stripe.products.search({
+      const existing = await getStripe().products.search({
         query: `metadata["product_id"]:"${productId}"`,
         limit: 1,
       });
@@ -64,8 +71,8 @@ export async function syncProductToStripe(
 
       stripeProduct =
         existing.data.length > 0
-          ? await stripe.products.update(existing.data[0].id, payload)
-          : await stripe.products.create(payload);
+          ? await getStripe().products.update(existing.data[0].id, payload)
+          : await getStripe().products.create(payload);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Stripe error";
       return { success: false, error: `Stripe error: ${message}` };
@@ -109,7 +116,7 @@ export async function syncVariantPricesToStripe(
       : null;
 
     if (!stripeProduct) {
-      const existing = await stripe.products.search({
+      const existing = await getStripe().products.search({
         query: `metadata["product_id"]:"${productId}"`,
         limit: 1,
       });
@@ -125,13 +132,13 @@ export async function syncVariantPricesToStripe(
 
     for (const variant of variants) {
       try {
-        const existingPrices = await stripe.prices.search({
+        const existingPrices = await getStripe().prices.search({
           query: `metadata["variant_id"]:"${variant.id}"`,
           limit: 1,
         });
 
         if (existingPrices.data.length === 0) {
-          await stripe.prices.create({
+          await getStripe().prices.create({
             product: stripeProduct.id,
             unit_amount: priceInCents,
             currency: "usd",
@@ -146,7 +153,7 @@ export async function syncVariantPricesToStripe(
         } else {
           const existing = existingPrices.data[0];
           if (existing.unit_amount !== priceInCents) {
-            await stripe.prices.create({
+            await getStripe().prices.create({
               product: stripeProduct.id,
               unit_amount: priceInCents,
               currency: "usd",
@@ -157,7 +164,7 @@ export async function syncVariantPricesToStripe(
                 last_synced: new Date().toISOString(),
               },
             });
-            await stripe.prices.update(existing.id, { active: false });
+            await getStripe().prices.update(existing.id, { active: false });
             syncedCount++;
           }
         }
@@ -249,7 +256,7 @@ export async function getBulkProductSyncStatus(
     let hasMore = true;
     let startingAfter: string | undefined;
     while (hasMore) {
-      const resp = await stripe.products.list({ limit: 100, starting_after: startingAfter });
+      const resp = await getStripe().products.list({ limit: 100, starting_after: startingAfter });
       allStripeProducts = allStripeProducts.concat(resp.data);
       hasMore = resp.has_more;
       if (hasMore && resp.data.length > 0) startingAfter = resp.data[resp.data.length - 1].id;
@@ -266,7 +273,7 @@ export async function getBulkProductSyncStatus(
     hasMore = true;
     startingAfter = undefined;
     while (hasMore) {
-      const resp: Stripe.ApiList<Stripe.Price> = await stripe.prices.list({
+      const resp: Stripe.ApiList<Stripe.Price> = await getStripe().prices.list({
         limit: 100,
         starting_after: startingAfter,
       });
@@ -315,7 +322,7 @@ export async function getProductSyncStatus(
       .where(eq(productVariants.productId, productId));
     const variantCount = variants.length;
 
-    const existing = await stripe.products.search({
+    const existing = await getStripe().products.search({
       query: `metadata["product_id"]:"${productId}"`,
       limit: 1,
     });
@@ -327,7 +334,7 @@ export async function getProductSyncStatus(
     const stripeProduct = existing.data[0];
     let syncedVariants = 0;
     for (const variant of variants) {
-      const prices = await stripe.prices.search({
+      const prices = await getStripe().prices.search({
         query: `metadata["variant_id"]:"${variant.id}"`,
         limit: 1,
       });
@@ -359,7 +366,7 @@ export async function getStripeProductsList(params?: {
     let hasMore = true;
     let startingAfter: string | undefined;
     while (hasMore) {
-      const resp = await stripe.products.list({ limit: 100, starting_after: startingAfter });
+      const resp = await getStripe().products.list({ limit: 100, starting_after: startingAfter });
       all = all.concat(resp.data);
       hasMore = resp.has_more;
       if (hasMore && resp.data.length > 0) startingAfter = resp.data[resp.data.length - 1].id;
@@ -371,7 +378,7 @@ export async function getStripeProductsList(params?: {
 
     const list = await Promise.all(
       paginated.map(async (product) => {
-        const prices = await stripe.prices.list({ product: product.id, limit: 100 });
+        const prices = await getStripe().prices.list({ product: product.id, limit: 100 });
         return {
           stripeId: product.id,
           name: product.name,
@@ -401,7 +408,7 @@ export async function cleanupInactiveStripeProducts(): Promise<ActionResponse<St
     let hasMore = true;
     let startingAfter: string | undefined;
     while (hasMore) {
-      const resp = await stripe.products.list({ limit: 100, starting_after: startingAfter });
+      const resp = await getStripe().products.list({ limit: 100, starting_after: startingAfter });
       all = all.concat(resp.data);
       hasMore = resp.has_more;
       if (hasMore && resp.data.length > 0) startingAfter = resp.data[resp.data.length - 1].id;
@@ -416,14 +423,14 @@ export async function cleanupInactiveStripeProducts(): Promise<ActionResponse<St
       const dbProductId = stripeProduct.metadata.product_id;
       if (!activeIds.has(dbProductId)) {
         try {
-          const prices = await stripe.prices.list({ product: stripeProduct.id, limit: 100 });
+          const prices = await getStripe().prices.list({ product: stripeProduct.id, limit: 100 });
           for (const price of prices.data) {
             if (price.active) {
-              await stripe.prices.update(price.id, { active: false });
+              await getStripe().prices.update(price.id, { active: false });
               deletedPrices++;
             }
           }
-          await stripe.products.update(stripeProduct.id, {
+          await getStripe().products.update(stripeProduct.id, {
             active: false,
             metadata: {
               ...stripeProduct.metadata,

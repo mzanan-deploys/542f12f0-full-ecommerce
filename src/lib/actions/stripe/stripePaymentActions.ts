@@ -3,13 +3,20 @@
 import Stripe from 'stripe';
 import type { CreatePaymentIntentResponse, OrderItemDetail, StripeValidationResult } from '@/types/stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables');
+let cachedStripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (cachedStripe) return cachedStripe;
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error(
+      'Stripe not configured. Set STRIPE_SECRET_KEY in your Vercel project to enable checkout.',
+    );
+  }
+  cachedStripe = new Stripe(key, {
+    apiVersion: '2025-04-30.basil' as any,
+  });
+  return cachedStripe;
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil' as any,
-});
 
 export async function createPaymentIntent(
   amountInCents: number,
@@ -32,7 +39,7 @@ export async function createPaymentIntent(
       paymentIntentParams.receipt_email = receiptEmail;
     }
 
-    const paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
+    const paymentIntent = await getStripe().paymentIntents.create(paymentIntentParams);
 
     return { clientSecret: paymentIntent.client_secret ?? undefined };
   } catch (error: any) {
@@ -51,7 +58,7 @@ export async function createPaymentIntentWithStripeProducts(
     let totalAmount = 0;
 
     for (const item of items) {
-      const prices = await stripe.prices.search({
+      const prices = await getStripe().prices.search({
         query: `metadata["variant_id"]:"${item.variantId}" AND active:"true"`,
         limit: 1,
       });
@@ -86,7 +93,7 @@ export async function createPaymentIntentWithStripeProducts(
       paymentIntentParams.receipt_email = receiptEmail;
     }
 
-    const paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
+    const paymentIntent = await getStripe().paymentIntents.create(paymentIntentParams);
 
     return { clientSecret: paymentIntent.client_secret ?? undefined };
   } catch (error: any) {
@@ -101,7 +108,7 @@ export async function validateCartItemsInStripe(items: OrderItemDetail[]): Promi
 
   for (const item of items) {
     try {
-      const prices = await stripe.prices.search({
+      const prices = await getStripe().prices.search({
         query: `metadata["variant_id"]:"${item.variantId}" AND active:"true"`,
         limit: 1,
       });

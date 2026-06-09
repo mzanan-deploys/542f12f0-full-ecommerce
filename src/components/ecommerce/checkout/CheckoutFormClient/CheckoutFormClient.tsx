@@ -15,7 +15,8 @@ import { useStripePayment } from '@/hooks/useStripePayment';
 import { Loader2 } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'checkoutAddress';
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 const CheckoutFormContents = ({ onCountryChange, shippingPrice }: { onCountryChange?: (country: string) => void, shippingPrice?: number }) => {
     const methods = useForm<AddressFormValues>({
@@ -158,9 +159,19 @@ const CheckoutFormContents = ({ onCountryChange, shippingPrice }: { onCountryCha
 }
 
 export default function CheckoutFormClient({ onCountryChange, shippingPrice }: { onCountryChange?: (country: string) => void, shippingPrice?: number }) {
+    if (!stripePromise) {
+        return (
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-6 text-center">
+                <p className="text-gray-700">Checkout isn&apos;t configured yet.</p>
+                <p className="mt-2 text-sm text-gray-500">
+                    The store owner is finishing setup. Contact us to place an order in the meantime.
+                </p>
+            </div>
+        );
+    }
     return (
         <Elements stripe={stripePromise}>
             <CheckoutFormContents onCountryChange={onCountryChange} shippingPrice={shippingPrice} />
         </Elements>
     );
-} 
+}
