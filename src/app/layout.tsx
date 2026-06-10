@@ -42,9 +42,6 @@ export const metadata: Metadata = {
   creator: BRAND_CONFIG.name,
   publisher: BRAND_CONFIG.name,
   robots: "index, follow",
-  icons: {
-    icon: "/icon.svg",
-  },
   openGraph: {
     type: "website",
     siteName: BRAND_CONFIG.name,
