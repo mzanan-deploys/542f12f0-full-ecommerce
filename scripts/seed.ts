@@ -60,8 +60,8 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-function unsplashUrl(query: string, width = 800, height = 1000) {
-  return `https://source.unsplash.com/${width}x${height}/?${encodeURIComponent(query)}`;
+function demoImageUrl(seed: string, width = 800, height = 1000) {
+  return `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`;
 }
 
 async function seed() {
@@ -106,7 +106,7 @@ async function seed() {
     const product = insertedProducts[i];
     await db.insert(productImages).values({
       productId: product.id,
-      imageUrl: unsplashUrl(PRODUCTS[i].imageQuery),
+      imageUrl: demoImageUrl(PRODUCTS[i].imageQuery),
       altText: product.name,
       position: 0,
     });
@@ -160,7 +160,7 @@ async function seed() {
   await db.insert(setImages).values(
     insertedSets.map((set, i) => ({
       setId: set.id,
-      imageUrl: unsplashUrl(SETS[i].imageQuery, 1200, 800),
+      imageUrl: demoImageUrl(SETS[i].imageQuery, 1200, 800),
       altText: set.name,
       position: 0,
     })),
@@ -173,7 +173,7 @@ async function seed() {
       id: 1,
       title: HERO.title,
       subtitle: HERO.subtitle,
-      imageUrl: unsplashUrl(HERO.imageQuery, 1920, 1080),
+      imageUrl: demoImageUrl(HERO.imageQuery, 1920, 1080),
     })
     .onConflictDoNothing();
 
