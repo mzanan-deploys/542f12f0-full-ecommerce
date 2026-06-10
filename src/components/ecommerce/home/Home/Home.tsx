@@ -79,17 +79,16 @@ export default function Home({
 
       {renderContentSections()}
 
-      {aboutContentData && aboutContentData.text_content && (
-        <div className="snap-start sm:min-h-dvh-header md:h-dvh-header">
-          <AboutSection
-            text={aboutContentData.text_content}
-            images={aboutContentData.image_urls}
-            aspectRatio={aboutContentData.image_aspect_ratio || 'square'}
-          />
-        </div>
-      )}
-
-      <div className="snap-end">
+      <div className="snap-start flex h-dvh-header flex-col">
+        {aboutContentData && aboutContentData.text_content && (
+          <div className="min-h-0 flex-1 overflow-hidden">
+            <AboutSection
+              text={aboutContentData.text_content}
+              images={aboutContentData.image_urls}
+              aspectRatio={aboutContentData.image_aspect_ratio || 'square'}
+            />
+          </div>
+        )}
         <Footer />
       </div>
     </div>
