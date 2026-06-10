@@ -106,9 +106,10 @@ No external auth service, no extra dashboard. Sessions and credentials live in y
 After deploy:
 
 ```bash
-npx vercel env pull .env.local   # fetch Postgres URL locally
-npm run db:push                  # apply schema
-npm run db:seed                  # (optional) demo data
+npx vercel link                                          # select your new project
+npx vercel env pull .env.local --environment=production  # fetch the Postgres URL
+npm run db:push                                          # apply schema
+npm run db:seed                                          # (optional) demo data
 ```
 
 ### 5. Customize branding

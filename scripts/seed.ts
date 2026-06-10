@@ -1,13 +1,6 @@
-/**
- * Seed script para popular la DB con demo data.
- *
- * Ejecutar: `npm run db:seed`
- *
- * 10 productos genéricos con imágenes Unsplash, 3 categorías, 4 sets.
- * Reemplaza completamente cualquier data previa (tabla rasa para demo).
- */
+import { existsSync } from "node:fs";
 
-import "dotenv/config";
+if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 import { db } from "@/db";
 import {
@@ -26,8 +19,6 @@ const CATEGORIES = [
   { name: "Accessories", sizes: ["One Size"] },
 ];
 
-// Productos placeholder. image_url apunta a Unsplash source — gratis, sin API key.
-// Reemplazar por uploads reales a Vercel Blob una vez que el comprador suba sus assets.
 const PRODUCTS = [
   { name: "Linen Shirt", categoryIdx: 0, price: "89.00", imageQuery: "linen-shirt" },
   { name: "Cotton Tee", categoryIdx: 0, price: "39.00", imageQuery: "white-tshirt" },
@@ -83,7 +74,7 @@ async function seed() {
       PRODUCTS.map((p) => ({
         name: p.name,
         slug: slugify(p.name),
-        description: `${p.name} — production-ready demo product. Replace with your own copy.`,
+        description: `${p.name}: production-ready demo product. Replace with your own copy.`,
         price: p.price,
         isFeatured: false,
         isActive: true,
@@ -123,7 +114,7 @@ async function seed() {
       SETS.map((s) => ({
         name: s.name,
         slug: slugify(s.name),
-        description: `${s.name} — demo set, replace with your curated picks.`,
+        description: `${s.name}: demo set, replace with your curated picks.`,
         isActive: true,
         type: s.type,
         layoutType: s.layoutType,
