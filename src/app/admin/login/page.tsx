@@ -19,7 +19,7 @@ export default async function LoginPage() {
   const hasAdmin = await hasAdminAccount();
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="flex w-full min-h-screen items-center justify-center p-4">
       <AdminLoginForm mode={hasAdmin ? "login" : "setup"} />
     </main>
   );
