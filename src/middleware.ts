@@ -1,26 +1,11 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-const isAdminRoute = createRouteMatcher([
-  "/admin/dashboard(.*)",
-  "/admin/products(.*)",
-  "/admin/sets(.*)",
-  "/admin/size-guides(.*)",
-  "/admin/disclaimer(.*)",
-  "/admin/home-design(.*)",
-  "/admin/categories(.*)",
-  "/admin/shipping-prices(.*)",
-  "/admin/hero-settings(.*)",
-  "/admin/about(.*)",
-  "/admin/bulk-upload(.*)",
-  "/admin/stripe-sync(.*)",
-]);
+const ADMIN_ROUTE = /^\/admin\/(dashboard|products|sets|size-guides|disclaimer|home-design|categories|shipping-prices|hero-settings|about|bulk-upload|stripe-sync)/;
 
-const isLoginRoute = createRouteMatcher(["/admin/login"]);
-
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, redirectToSignIn } = await auth();
+export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const hasSession = Boolean(getSessionCookie(req));
 
   if (pathname === "/admin") {
     const url = req.nextUrl.clone();
@@ -28,18 +13,15 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(url);
   }
 
-  if (isLoginRoute(req) && userId) {
+  if (ADMIN_ROUTE.test(pathname) && !hasSession) {
     const url = req.nextUrl.clone();
-    url.pathname = "/admin/dashboard";
+    url.pathname = "/admin/login";
+    url.search = `?redirect=${encodeURIComponent(pathname)}`;
     return NextResponse.redirect(url);
   }
 
-  if (isAdminRoute(req) && !userId) {
-    return redirectToSignIn({ returnBackUrl: req.url });
-  }
-
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: [

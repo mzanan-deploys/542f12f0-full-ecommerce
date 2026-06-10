@@ -1,21 +1,22 @@
-import { useUser } from "@clerk/nextjs";
+import { authClient } from "@/lib/auth/authClient";
 import type { UserSessionData } from "@/types/auth";
 
 export function useAuth() {
-  const { user, isLoaded } = useUser();
+  const { data, isPending } = authClient.useSession();
+  const user = data?.user ?? null;
 
   const sessionData: UserSessionData = user
     ? {
-        name: user.fullName ?? user.username ?? user.primaryEmailAddress?.emailAddress?.split("@")[0],
-        email: user.primaryEmailAddress?.emailAddress,
-        avatarUrl: user.imageUrl,
+        name: user.name || user.email?.split("@")[0],
+        email: user.email,
+        avatarUrl: user.image,
       }
     : {};
 
   return {
     user,
     sessionData,
-    isLoading: !isLoaded,
+    isLoading: isPending,
     isAuthenticated: !!user,
   };
 }

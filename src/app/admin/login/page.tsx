@@ -1,16 +1,26 @@
-import { SignIn } from "@clerk/nextjs";
+import { count } from "drizzle-orm";
+
+import { AdminLoginForm } from "@/components/admin/auth/AdminLoginForm/AdminLoginForm";
+import { db } from "@/db";
+import { user } from "@/db/schema";
 
 export const dynamic = "force-dynamic";
 
-export default function LoginPage() {
+async function hasAdminAccount(): Promise<boolean> {
+  try {
+    const [{ value }] = await db.select({ value: count() }).from(user);
+    return value > 0;
+  } catch {
+    return true;
+  }
+}
+
+export default async function LoginPage() {
+  const hasAdmin = await hasAdminAccount();
+
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
-      <SignIn
-        path="/admin/login"
-        routing="path"
-        signUpUrl="/admin/sign-up"
-        forceRedirectUrl="/admin/dashboard"
-      />
+      <AdminLoginForm mode={hasAdmin ? "login" : "setup"} />
     </main>
   );
 }

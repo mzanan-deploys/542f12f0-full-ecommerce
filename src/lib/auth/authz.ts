@@ -1,12 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { adminUsers } from "@/db/schema";
+import { getAuth } from "@/lib/auth/auth";
 
 export async function getCurrentUserId(): Promise<string | null> {
-  const { userId } = await auth();
-  return userId;
+  const session = await getAuth().api.getSession({ headers: await headers() });
+  return session?.user.id ?? null;
 }
 
 export async function requireAuth(): Promise<string> {
