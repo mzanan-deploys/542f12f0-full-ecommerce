@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSetsList } from '@/lib/queries/setQueries.server';
+import { requireAdmin } from '@/lib/auth/authz';
 
 export async function GET(request: NextRequest) {
+  try {
+    await requireAdmin();
+  } catch {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const orderBy = (searchParams.get('orderBy') as 'name' | 'created_at' | 'id' | 'updated_at' | 'is_active' | 'type' | 'description' | 'slug' | 'layout_type' | 'show_title_on_home') || 'created_at';
