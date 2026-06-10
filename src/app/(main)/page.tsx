@@ -5,7 +5,7 @@ import { getHeroContent } from "@/lib/queries/heroQueries.server";
 import type { HomePageItemOrchestrator, AboutContentData } from "@/types/home";
 import { generateMetadata } from "@/lib/utils/seo";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function HomePage() {
   let homepageItems: HomePageItemOrchestrator[] = [];

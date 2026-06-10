@@ -4,11 +4,15 @@ if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 import { db } from "@/db";
 import {
+  appSettings,
   categorySizes,
+  heroContent,
+  homepageLayout,
   productCategories,
   productImages,
   productVariants,
   products,
+  setImages,
   setProducts,
   sets,
 } from "@/db/schema";
@@ -33,11 +37,24 @@ const PRODUCTS = [
 ];
 
 const SETS = [
-  { name: "Spring Essentials", type: "DAY", layoutType: "STAGGERED_THREE", productIdxs: [0, 1, 4] },
-  { name: "Evening Casual", type: "NIGHT", layoutType: "TWO_HORIZONTAL", productIdxs: [2, 3] },
-  { name: "Travel Kit", type: "DAY", layoutType: "SPLIT_SMALL_LEFT", productIdxs: [7, 8, 9] },
-  { name: "Weekend Mood", type: "NIGHT", layoutType: "SINGLE_COLUMN", productIdxs: [5, 6] },
+  { name: "Spring Essentials", type: "DAY", layoutType: "STAGGERED_THREE", productIdxs: [0, 1, 4], imageQuery: "spring-fashion" },
+  { name: "Evening Casual", type: "NIGHT", layoutType: "TWO_HORIZONTAL", productIdxs: [2, 3], imageQuery: "evening-outfit" },
+  { name: "Travel Kit", type: "DAY", layoutType: "SPLIT_SMALL_LEFT", productIdxs: [7, 8, 9], imageQuery: "travel-accessories" },
+  { name: "Weekend Mood", type: "NIGHT", layoutType: "SINGLE_COLUMN", productIdxs: [5, 6], imageQuery: "casual-weekend-style" },
 ];
+
+const HERO = {
+  title: "Your store, ready to ship",
+  subtitle: "Demo content seeded automatically. Make it yours from the admin panel.",
+  imageQuery: "minimal-fashion-store",
+};
+
+const ABOUT = {
+  text_content:
+    "Tell your story here. This section, the hero and the whole homepage layout are editable from the admin panel.",
+  image_urls: null,
+  image_aspect_ratio: "portrait",
+};
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -138,6 +155,46 @@ async function seed() {
       })),
     );
   }
+
+  console.log("Seeding set images...");
+  await db.insert(setImages).values(
+    insertedSets.map((set, i) => ({
+      setId: set.id,
+      imageUrl: unsplashUrl(SETS[i].imageQuery, 1200, 800),
+      altText: set.name,
+      position: 0,
+    })),
+  );
+
+  console.log("Seeding hero content...");
+  await db
+    .insert(heroContent)
+    .values({
+      id: 1,
+      title: HERO.title,
+      subtitle: HERO.subtitle,
+      imageUrl: unsplashUrl(HERO.imageQuery, 1920, 1080),
+    })
+    .onConflictDoNothing();
+
+  console.log("Seeding homepage layout...");
+  await db
+    .insert(homepageLayout)
+    .values(
+      insertedSets.map((set, i) => ({
+        itemId: set.id,
+        itemType: "set",
+        displayOrder: i,
+        pagePath: "/",
+      })),
+    )
+    .onConflictDoNothing();
+
+  console.log("Seeding about content...");
+  await db
+    .insert(appSettings)
+    .values({ key: "about_content", value: JSON.stringify(ABOUT) })
+    .onConflictDoNothing();
 
   console.log("Seed complete.");
   console.log(
