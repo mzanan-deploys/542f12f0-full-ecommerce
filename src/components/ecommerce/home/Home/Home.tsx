@@ -5,6 +5,7 @@ import PathSelector from '@/components/ecommerce/home/InteractiveSplitScreen/Int
 import AboutSection from '@/components/ecommerce/home/AboutSection/AboutSection';
 import HeroImage from '@/components/ecommerce/home/HeroImage/HeroImage';
 import DisplaySets from '@/components/ecommerce/home/DisplaySets/DisplaySets';
+import Footer from '@/components/ecommerce/layout/Footer/Footer';
 import { useHome } from './useHome';
 import { useImagePreloader, extractImageUrls } from '@/hooks/useImagePreloader';
 import type { HomeProps } from '@/types/home';
@@ -87,6 +88,10 @@ export default function Home({
           />
         </div>
       )}
+
+      <div className="snap-end">
+        <Footer />
+      </div>
     </div>
   );
 } 
