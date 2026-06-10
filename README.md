@@ -6,7 +6,7 @@ A complete ecommerce starter with admin panel, real-time stock, orders, and emai
 
 - **Next.js 16** + React 19 + TypeScript + Tailwind v4
 - **Neon Postgres** (via Vercel integration) + **Drizzle ORM**
-- **Clerk** for admin authentication
+- **Better Auth** for admin authentication (self-hosted, no external service)
 - **Vercel Blob** for image storage
 - **Resend** + **React Email** for transactional emails
 - **Stripe** for payments
@@ -25,20 +25,20 @@ From here on, the README assumes you're working in your own copy.
 
 ## One-click deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmzanan%2Ffull-ecommerce&project-name=my-store&repository-name=my-store&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv,oac_VqOgBHqhEoFTPzGkPd7L0iH6)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmzanan%2Ffull-ecommerce&project-name=my-store&repository-name=my-store&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv,oac_VqOgBHqhEoFTPzGkPd7L0iH6&env=BETTER_AUTH_SECRET&envDescription=Session%20secret%20for%20the%20self-hosted%20admin%20login%3A%20any%20long%20random%20string&envLink=https%3A%2F%2Fgithub.com%2Fmzanan%2Ffull-ecommerce%23readme)
 
 > Replace `mzanan` in the button URL above with your GitHub username after you create your own copy (or Vercel will clone the original).
 
 The button provisions:
 - A Neon Postgres database (auto-fills `POSTGRES_URL`)
 - A Vercel Blob store (auto-fills `BLOB_READ_WRITE_TOKEN`)
-- The Clerk integration (prompts for sign-in)
 - The Resend integration (prompts for sign-in)
+- Prompts for `BETTER_AUTH_SECRET` (any long random string)
 
 You still need to:
 - Set up Stripe manually (see step 3 below)
 - Run the initial database migration (see step 4)
-- Configure the Clerk webhook (see step 1)
+- Create your admin account on first visit to `/admin/login` (see step 1)
 
 ## Edit with v0
 
@@ -77,14 +77,13 @@ npm run lint
 
 ## Manual setup
 
-### 1. Clerk
+### 1. Admin account (Better Auth, self-hosted)
 
-1. Create an application at [clerk.com](https://clerk.com).
-2. Copy the **Publishable key** to `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and the **Secret key** to `CLERK_SECRET_KEY`.
-3. Under **Webhooks**, add an endpoint pointing to `https://YOUR_DOMAIN/api/webhooks/clerk` with events `user.created`, `user.updated`, `user.deleted`. Copy the **Signing secret** to `CLERK_WEBHOOK_SECRET`.
-4. Under **User & Authentication → Restrictions**, disable public sign-ups so only invited admins can register.
+1. Set `BETTER_AUTH_SECRET` to any long random string (e.g. `openssl rand -base64 32`).
+2. Open `/admin/login`. On first visit you will be asked to create the admin account (email + password).
+3. That first account is the only one: sign-up locks itself automatically afterwards.
 
-Every Clerk user is mirrored to the `admin_users` table by the webhook. There is no separate admin role: being in Clerk = being an admin. Lock down sign-ups in step 4.
+No external auth service, no extra dashboard. Sessions and credentials live in your own Postgres.
 
 ### 2. Resend
 
@@ -145,14 +144,14 @@ src/
   db/                 # Drizzle schema + client
   lib/
     actions/          # Server actions
-    auth/             # Clerk integration helpers
+    auth/             # Better Auth instance + authz helpers
     db/               # DB selectors (snake_case mapping)
     email/            # Resend + React Email templates
     helpers/          # Storage, product, shipping helpers
     queries/          # Read queries (server)
     schemas/          # Zod validation schemas
   emails/             # React Email templates
-  middleware.ts       # Clerk middleware
+  middleware.ts       # admin session gate
 scripts/
   seed.ts             # Demo data generator
 drizzle.config.ts     # Drizzle Kit config
