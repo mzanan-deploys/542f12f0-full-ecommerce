@@ -5,7 +5,6 @@ import PathSelector from '@/components/ecommerce/home/InteractiveSplitScreen/Int
 import AboutSection from '@/components/ecommerce/home/AboutSection/AboutSection';
 import HeroImage from '@/components/ecommerce/home/HeroImage/HeroImage';
 import DisplaySets from '@/components/ecommerce/home/DisplaySets/DisplaySets';
-import Footer from '@/components/ecommerce/layout/Footer/Footer';
 import { useHome } from './useHome';
 import { useImagePreloader, extractImageUrls } from '@/hooks/useImagePreloader';
 import type { HomeProps } from '@/types/home';
@@ -79,18 +78,15 @@ export default function Home({
 
       {renderContentSections()}
 
-      <div className="snap-start flex h-dvh-header flex-col">
-        {aboutContentData && aboutContentData.text_content && (
-          <div className="min-h-0 flex-1 overflow-hidden">
-            <AboutSection
-              text={aboutContentData.text_content}
-              images={aboutContentData.image_urls}
-              aspectRatio={aboutContentData.image_aspect_ratio || 'square'}
-            />
-          </div>
-        )}
-        <Footer />
-      </div>
+      {aboutContentData && aboutContentData.text_content && (
+        <div className="snap-start sm:min-h-dvh-header md:h-dvh-header">
+          <AboutSection
+            text={aboutContentData.text_content}
+            images={aboutContentData.image_urls}
+            aspectRatio={aboutContentData.image_aspect_ratio || 'square'}
+          />
+        </div>
+      )}
     </div>
   );
 } 
