@@ -3,7 +3,7 @@ import { getSessionCookie } from "better-auth/cookies";
 
 const ADMIN_ROUTE = /^\/admin\/(dashboard|products|sets|size-guides|disclaimer|home-design|categories|shipping-prices|hero-settings|about|bulk-upload|stripe-sync)/;
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const hasSession = Boolean(getSessionCookie(req));
 

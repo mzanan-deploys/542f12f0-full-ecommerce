@@ -152,7 +152,7 @@ src/
     queries/          # Read queries (server)
     schemas/          # Zod validation schemas
   emails/             # React Email templates
-  middleware.ts       # admin session gate
+  proxy.ts            # admin session gate
 scripts/
   seed.ts             # Demo data generator
 drizzle.config.ts     # Drizzle Kit config

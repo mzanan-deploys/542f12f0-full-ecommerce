@@ -46,3 +46,4 @@ next-env.d.ts
 
 # images
 /public/images/
+.env*.local
