@@ -35,7 +35,7 @@ const PathSelector = forwardRef<HTMLElement, PathSelectorProps>((
   };
 
   return (
-    <section id="path-selector" ref={ref} className="relative h-dvh w-full max-w-[100vw] overflow-hidden snap-start">
+    <section id="path-selector" ref={ref} className="relative h-dvh-header w-full max-w-[100vw] overflow-hidden snap-start">
       <div className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center z-20">
         <p className="text-lg font-medium text-gray-500 mb-2">Choose your path</p>
         <div className="flex items-center gap-2 text-sm text-gray-400">

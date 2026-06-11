@@ -68,7 +68,7 @@ export default function Home({
   };
 
   return (
-    <div className="overflow-x-hidden overflow-y-scroll w-full max-w-[100vw] snap-y snap-mandatory" style={{ height: '100vh' }}>
+    <div className="overflow-x-hidden overflow-y-scroll w-full max-w-[100vw] snap-y snap-mandatory h-dvh-header">
       <HeroImage imageUrl={heroImageUrl} />
 
       <PathSelector
