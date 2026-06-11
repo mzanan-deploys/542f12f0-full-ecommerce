@@ -16,7 +16,6 @@ export const CONTACT_INFO = {
 
 export const COMPANY_INFO = {
   NAME: BRAND_CONFIG.name,
-  FOUNDED_YEAR: 2025,
   TWITTER_HANDLE: BRAND_CONFIG.social.twitterHandle,
   DESCRIPTION: BRAND_CONFIG.description,
 } as const;

@@ -13,6 +13,7 @@ type FooterProps = {
 
 const Footer = ({ variant = 'default' }: FooterProps) => {
   const isOverlay = variant === 'overlay';
+  const year = new Date().getFullYear();
 
   return (
     <footer
@@ -24,22 +25,22 @@ const Footer = ({ variant = 'default' }: FooterProps) => {
       )}
     >
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-3 w-full">
-        <div className={cn('text-sm', isOverlay && 'text-xs')}>
-          © {COMPANY_INFO.FOUNDED_YEAR} {COMPANY_INFO.NAME}. All rights reserved.
-        </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+          <span className={cn('text-sm', isOverlay && 'text-xs')}>
+            © {year} {COMPANY_INFO.NAME}. All rights reserved.
+          </span>
           {!isOverlay && <SocialLinks />}
-          {!hideAttribution && (
-            <a
-              href="https://itsmatias.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            >
-              Built by Matias Zanan
-            </a>
-          )}
         </div>
+        {!hideAttribution && (
+          <a
+            href="https://itsmatias.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+          >
+            Built by itsmatias.com
+          </a>
+        )}
       </div>
     </footer>
   );
