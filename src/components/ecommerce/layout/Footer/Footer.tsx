@@ -3,18 +3,32 @@
 import React from 'react';
 import { COMPANY_INFO } from '@/lib/constants/social';
 import SocialLinks from '@/components/ecommerce/layout/SocialLinks/SocialLinks';
+import { cn } from '@/lib/utils/cn';
 
 const hideAttribution = process.env.NEXT_PUBLIC_HIDE_ATTRIBUTION === 'true';
 
-const Footer = () => {
+type FooterProps = {
+  variant?: 'default' | 'overlay';
+};
+
+const Footer = ({ variant = 'default' }: FooterProps) => {
+  const isOverlay = variant === 'overlay';
+
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-8 z-10 h-full flex items-center">
+    <footer
+      className={cn(
+        'z-10 flex items-center',
+        isOverlay
+          ? 'absolute inset-x-0 bottom-0 py-3 text-gray-600'
+          : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-8 h-full'
+      )}
+    >
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-3 w-full">
-        <div className="text-sm">
+        <div className={cn('text-sm', isOverlay && 'text-xs')}>
           © {COMPANY_INFO.FOUNDED_YEAR} {COMPANY_INFO.NAME}. All rights reserved.
         </div>
         <div className="flex items-center gap-4">
-          <SocialLinks />
+          {!isOverlay && <SocialLinks />}
           {!hideAttribution && (
             <a
               href="https://itsmatias.com"
