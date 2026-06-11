@@ -221,48 +221,49 @@ export async function getSetPageBySlug(slug: string): Promise<SetPageResult> {
 
     if (!setRow) return { success: false, error: "Set not found" };
 
-    const setImagesRows = await db
-      .select(setImageSelector)
-      .from(setImages)
-      .where(eq(setImages.setId, setRow.id))
-      .orderBy(asc(setImages.position));
-
-    const productRows = await db
-      .select({
-        ...productSelector,
-        sp_position: setProducts.position,
-        category: {
-          id: productCategories.id,
-          name: productCategories.name,
-          size_guide_id: productCategories.sizeGuideId,
-        },
-        size_guide_data: sizeGuideTemplates.guideData,
-      })
-      .from(setProducts)
-      .innerJoin(products, eq(products.id, setProducts.productId))
-      .leftJoin(productCategories, eq(productCategories.id, products.categoryId))
-      .leftJoin(sizeGuideTemplates, eq(sizeGuideTemplates.id, productCategories.sizeGuideId))
-      .where(eq(setProducts.setId, setRow.id))
-      .orderBy(asc(setProducts.position));
+    const [setImagesRows, productRows] = await Promise.all([
+      db
+        .select(setImageSelector)
+        .from(setImages)
+        .where(eq(setImages.setId, setRow.id))
+        .orderBy(asc(setImages.position)),
+      db
+        .select({
+          ...productSelector,
+          sp_position: setProducts.position,
+          category: {
+            id: productCategories.id,
+            name: productCategories.name,
+            size_guide_id: productCategories.sizeGuideId,
+          },
+          size_guide_data: sizeGuideTemplates.guideData,
+        })
+        .from(setProducts)
+        .innerJoin(products, eq(products.id, setProducts.productId))
+        .leftJoin(productCategories, eq(productCategories.id, products.categoryId))
+        .leftJoin(sizeGuideTemplates, eq(sizeGuideTemplates.id, productCategories.sizeGuideId))
+        .where(eq(setProducts.setId, setRow.id))
+        .orderBy(asc(setProducts.position)),
+    ]);
 
     const productIds = productRows.map((p) => p.id);
-    const allImages = productIds.length
-      ? await db
-          .select(productImageSelector)
-          .from(productImages)
-          .where(inArray(productImages.productId, productIds))
-          .orderBy(asc(productImages.position))
-      : [];
-    const allVariants = productIds.length
-      ? await db
-          .select({
-            id: productVariants.id,
-            product_id: productVariants.productId,
-            size_name: productVariants.sizeName,
-          })
-          .from(productVariants)
-          .where(inArray(productVariants.productId, productIds))
-      : [];
+    const [allImages, allVariants] = productIds.length
+      ? await Promise.all([
+          db
+            .select(productImageSelector)
+            .from(productImages)
+            .where(inArray(productImages.productId, productIds))
+            .orderBy(asc(productImages.position)),
+          db
+            .select({
+              id: productVariants.id,
+              product_id: productVariants.productId,
+              size_name: productVariants.sizeName,
+            })
+            .from(productVariants)
+            .where(inArray(productVariants.productId, productIds)),
+        ])
+      : [[], []];
 
     const processedProducts: SetPageProduct[] = productRows.map((p) => {
       const imgs = allImages.filter((img) => img.product_id === p.id);

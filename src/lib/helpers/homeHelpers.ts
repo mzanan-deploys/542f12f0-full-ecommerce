@@ -40,44 +40,46 @@ export async function getHomepageItems(): Promise<HomePageItemOrchestrator[]> {
     const componentIds = layout.filter((i) => i.item_type === "page_component").map((i) => i.item_id);
     const setIds = layout.filter((i) => i.item_type === "set").map((i) => i.item_id);
 
-    const fetchedComponents = componentIds.length
-      ? ((await db
-          .select(pageComponentSelector)
-          .from(pageComponents)
-          .where(and(inArray(pageComponents.id, componentIds), eq(pageComponents.isActive, true)))) as PageComponent[])
-      : [];
-
-    const fetchedSets = setIds.length
-      ? ((await db
-          .select(setSelector)
-          .from(sets)
-          .where(and(inArray(sets.id, setIds), eq(sets.isActive, true)))) as SetRow[])
-      : [];
+    const [fetchedComponents, fetchedSets] = await Promise.all([
+      componentIds.length
+        ? (db
+            .select(pageComponentSelector)
+            .from(pageComponents)
+            .where(and(inArray(pageComponents.id, componentIds), eq(pageComponents.isActive, true))) as Promise<PageComponent[]>)
+        : Promise.resolve([] as PageComponent[]),
+      setIds.length
+        ? (db
+            .select(setSelector)
+            .from(sets)
+            .where(and(inArray(sets.id, setIds), eq(sets.isActive, true))) as Promise<SetRow[]>)
+        : Promise.resolve([] as SetRow[]),
+    ]);
 
     let imagesBySetId: Record<string, Array<Record<string, unknown>>> = {};
     let productsBySetId: Record<string, Array<{ position: number | null; products: Record<string, unknown> & { product_images: Array<Record<string, unknown>> } }>> = {};
     if (fetchedSets.length) {
       const setIdList = fetchedSets.map((s) => s.id);
-      const imgs = await db
-        .select(setImageSelector)
-        .from(setImages)
-        .where(inArray(setImages.setId, setIdList))
-        .orderBy(asc(setImages.position));
+      const [imgs, productRows] = await Promise.all([
+        db
+          .select(setImageSelector)
+          .from(setImages)
+          .where(inArray(setImages.setId, setIdList))
+          .orderBy(asc(setImages.position)),
+        db
+          .select({
+            set_id: setProducts.setId,
+            position: setProducts.position,
+            ...productSelector,
+          })
+          .from(setProducts)
+          .innerJoin(products, eq(products.id, setProducts.productId))
+          .where(inArray(setProducts.setId, setIdList))
+          .orderBy(asc(setProducts.position)),
+      ]);
       imagesBySetId = imgs.reduce<typeof imagesBySetId>((acc, img) => {
         (acc[img.set_id] ??= []).push(img);
         return acc;
       }, {});
-
-      const productRows = await db
-        .select({
-          set_id: setProducts.setId,
-          position: setProducts.position,
-          ...productSelector,
-        })
-        .from(setProducts)
-        .innerJoin(products, eq(products.id, setProducts.productId))
-        .where(inArray(setProducts.setId, setIdList))
-        .orderBy(asc(setProducts.position));
 
       const productIds = productRows.map((p) => p.id);
       const productImagesRows = productIds.length

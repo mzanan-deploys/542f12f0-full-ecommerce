@@ -1,4 +1,4 @@
-import { getSetPageBySlug } from '@/lib/queries/setQueries.server';
+import { getSetPageCached } from '@/lib/helpers/setPageHelpers';
 import { generateSetMetadata as generateSEOMetadata } from '@/lib/utils/seo';
 
 export async function generateSetMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -11,7 +11,7 @@ export async function generateSetMetadata({ params }: { params: Promise<{ slug: 
         };
     }
 
-    const setResult = await getSetPageBySlug(slug);
+    const setResult = await getSetPageCached(slug);
 
     if (!setResult.success || !setResult.data) {
         console.error(`Metadata generation failed: Set with slug "${slug}" not found.`);
